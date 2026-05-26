@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>La Riforma Calvinista - App Divulgativa</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lora:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #1a2a3a; /* Blu Teologico */
+            --accent-color: #c5a059;  /* Oro Antico */
+            --bg-color: #fcfaf7;      /* Carta Pergamena */
+            --text-color: #2c3e50;
+            --white: #ffffff;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Cinzel', serif;
+            color: var(--primary-color);
+        }
+
+        p {
+            font-family: 'Lora', serif;
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+            text-align: justify;
+        }
+
+        /* --- Header & Navigation --- */
+        header {
+            background-color: var(--primary-color);
+            color: var(--white);
+            padding: 1rem 2rem;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+
+        .menu-btn {
+            background: none;
+            border: none;
+            color: var(--accent-color);
+            font-size: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-family: 'Cinzel', serif;
+            font-weight: bold;
+            z-index: 1100;
+        }
+
+        /* --- Sidebar --- */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: -320px;
+            width: 320px;
+            height: 100%;
+            background-color: var(--primary-color);
+            color: var(--white);
+            transition: var(--transition);
+            z-index: 1050;
+            padding: 80px 20px 20px;
+            box-shadow: 5px 0 15px rgba(0,0,0,0.3);
+            overflow-y: auto;
+        }
+
+        .sidebar.active {
+            left: 0;
+        }
+
+        .sidebar ul {
+            list-style: none;
+        }
+
+        .sidebar li {
+            margin-bottom: 0.8rem;
+            border-bottom: 1px solid rgba(197, 160, 89, 0.2);
+        }
+
+        .sidebar a {
+            color: var(--white);
+            text-decoration: none;
+            font-size: 0.95rem;
+            display: block;
+            padding: 10px;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .sidebar a:hover {
+            color: var(--accent-color);
+            background: rgba(255,255,255,0.05);
+            padding-left: 15px;
+        }
+
+        .sidebar .quiz-link {
+            background-color: var(--accent-color);
+            color: var(--primary-color) !important;
+            font-weight: bold;
+            margin-top: 20px;
+            text-align: center;
+            border-radius: 4px;
+        }
+
+        /* --- Main Content --- */
+        main {
+            margin-top: 80px;
+            padding: 2rem;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+            transition: var(--transition);
+        }
+
+        .section {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .title-hero {
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            border-bottom: 3px solid var(--accent-color);
+            padding-bottom: 1rem;
+            text-align: center;
+        }
+
+        .pillar-card {
+            background: var(--white);
+            border-left: 5px solid var(--accent-color);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        .pillar-card h3 {
+            margin-bottom: 0.5rem;
+            font-size: 1.2rem;
+        }
+
+        /* --- Stili Immagini Aggiunti --- */
+        .content-img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            margin: 1.5rem auto;
+            border: 2px solid var(--accent-color);
+            display: block;
+        }
+
+        .img-caption {
+            font-family: 'Lora', serif;
+            font-size: 0.9rem;
+            color: #555;
+            text-align: center;
+            margin-top: -1rem;
+            margin-bottom: 2rem;
+            font-style: italic;
+        }
+
+        /* --- Quiz UI --- */
+        #quiz-container {
+            background: var(--white);
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .btn-action {
+            background: var(--primary-color);
+            color: var(--white);
+            border: none;
+            padding: 0.8rem 1.5rem;
+            font-family: 'Cinzel', serif;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: var(--transition);
+            margin-top: 1rem;
+        }
+
+        .btn-action:hover {
+            background: var(--accent-color);
+            color: var(--primary-color);
+        }
+
+        .option-btn {
+            display: block;
+            width: 100%;
+            text-align: left;
+            padding: 1rem;
+            margin-bottom: 0.5rem;
+            border: 2px solid #eee;
+            border-radius: 8px;
+            background: none;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            transition: var(--transition);
+        }
+
+        .option-btn:hover {
+            border-color: var(--accent-color);
+            background: #fffdf9;
+        }
+
+        .option-btn.correct { background: #d4edda; border-color: #28a745; }
+        .option-btn.wrong { background: #f8d7da; border-color: #dc3545; }
+
+        .nickname-input {
+            padding: 0.8rem;
+            width: 100%;
+            margin-bottom: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .leaderboard-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        .leaderboard-table th, .leaderboard-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .leaderboard-table th { background: var(--primary-color); color: var(--white); }
+
+        /* --- Overlay --- */
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1040;
+        }
+        .overlay.active { display: block; }
+
+        /* Mobile Adjustments */
+        @media (max-width: 600px) {
+            .title-hero { font-size: 1.8rem; }
+            main { padding: 1rem; }
+            .sidebar { width: 85%; left: -100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <button class="menu-btn" onclick="toggleMenu()">
+            <span>☰</span> MENU
+        </button>
+        <div style="font-family: 'Cinzel', serif; font-weight: bold; color: var(--accent-color);">G. CALVINO</div>
+    </header>
+
+    <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
+
+    <nav class="sidebar" id="sidebar">
+        <ul id="menu-list">
+            <li><a onclick="showSection('home')">Home Page</a></li>
+            <li><a onclick="showSection('origini')">1. Le Origini e la Fuga</a></li>
+            <li><a onclick="showSection('predestinazione')">2. La Predestinazione</a></li>
+            <li><a onclick="showSection('successo')">3. Il Successo Terreno</a></li>
+            <li><a onclick="showSection('capitalismo')">4. Etica e Capitalismo</a></li>
+            <li><a onclick="showSection('eucarestia')">5. L'Eucarestia</a></li>
+            <li><a onclick="showSection('rigorismo')">6. Rigorismo a Ginevra</a></li>
+            <li><a onclick="showSection('intolleranza')">7. Intolleranza e Serveto</a></li>
+            <li><a onclick="showSection('quiz-start')" class="quiz-link">PARTECIPA AL QUIZ</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        <section id="home" class="section active">
+            <h1 class="title-hero">La Riforma Calvinista</h1>
+            
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Johannes_calvin.jpg/400px-Johannes_calvin.jpg" alt="Ritratto di Giovanni Calvino" class="content-img" style="max-width: 300px;">
+            <p class="img-caption">Ritratto del teologo Giovanni Calvino (Tiziano Vecellio, attribuito)</p>
+
+            <p>Giovanni Calvino (1509–1564) è stato un teologo e riformatore francese, considerato, insieme a Martin Lutero, la figura più importante della Riforma Protestante. Nato a Noyon, in Piccardia, ricevette una solida formazione umanistica e giuridica. Inizialmente vicino alle idee luterane, dovette fuggire dalla Francia a causa delle persecuzioni religiose e si stabilì a Ginevra, in Svizzera. È qui che Calvino passò da essere un semplice rifugiato a diventare il leader indiscusso di una nuova Chiesa, trasformando la città nel centro propulsore del suo movimento.</p>
+            
+            <p>La Riforma Calvinista è una dottrina cristiana che radicalizza il protestantesimo luterano, poggiandosi su tre pilastri fondamentali:</p>
+
+            <div class="pillar-card">
+                <h3>1. La sovranità assoluta di Dio e la Predestinazione</h3>
+                <p style="font-size: 1rem;">L'idea che Dio sia l'unico padrone del destino umano e abbia già scelto, prima dell'inizio dei tempi, chi salvare (gli eletti) e chi condannare, senza che le opere umane possano cambiare questo decreto.</p>
+            </div>
+
+            <div class="pillar-card">
+                <h3>2. La santificazione della vita quotidiana e del lavoro</h3>
+                <p style="font-size: 1rem;">Il lavoro non è una condanna, ma una "vocazione" (Beruf). Il successo professionale e una vita morale impeccabile diventano i segni terreni attraverso cui il fedele può scorgere la conferma di essere stato scelto da Dio.</p>
+            </div>
+
+            <div class="pillar-card">
+                <h3>3. La Teocrazia e il rigorismo morale</h3>
+                <p style="font-size: 1rem;">A Ginevra la Chiesa calvinista impose allo Stato e alla società delle regole di comportamento rigidissime, controllando ogni aspetto della vita pubblica e privata e punendo severamente ogni forma di eresia o lusso.</p>
+            </div>
+        </section>
+
+        <section id="origini" class="section">
+            <h2 class="title-hero">Le Origini e la Fuga</h2>
+            
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/be/Geneve_1548.jpg/800px-Geneve_1548.jpg" alt="Ginevra nel 1548" class="content-img">
+            <p class="img-caption">Veduta della città di Ginevra nel 1548, la "Roma del Protestantesimo"</p>
+
+            <p>Giovanni Calvino nacque in Francia, precisamente a Noyon in Piccardia, nel 1509. Esercitò la sua attività come teologo e predicatore, rimanendo profondamente affascinato dalle dottrine insegnate da Martin Lutero. Tuttavia, nel 1534, all'età di venticinque anni, si trovò costretto a fuggire dalla sua terra natale a causa delle persecuzioni perpetrate dal re Francesco I contro coloro che predicavano le idee luterane. Calvino trovò così riparo e un ambiente sicuro a Ginevra, una città svizzera di lingua francese che all'epoca contava circa tredicimila abitanti. Proprio in questo luogo, il teologo francese rielaborò gli insegnamenti luterani per fondare il calvinismo, una Riforma destinata a durare ben più a lungo di quella zwingliana.</p>
+        </section>
+
+        <section id="predestinazione" class="section">
+            <h2 class="title-hero">Predestinazione Assoluta</h2>
+            <p>Dal punto di vista teologico, Calvino compie un passo ulteriore rispetto a Lutero, basandosi sul principio che la salvezza dell'uomo derivi unicamente da Dio. La sua tesi più importante è infatti la dottrina della predestinazione, secondo la quale Dio, essendo onnisciente, ha già stabilito fin dall'origine dei tempi e in modo incontrovertibile chi otterrà l'accesso al regno dei cieli e chi invece verrà condannato. Secondo questa visione, gli esseri umani non possono fare nulla per alterare il proprio destino, poiché la decisione divina segue criteri che restano del tutto imperscrutabili e incomprensibili all'uomo limitato. Di conseguenza, le opere e le azioni umane, per quanto possano apparire buone in apparenza, non hanno alcun valore per ottenere la salvezza, poiché il destino spirituale di ogni individuo è già scritto fin dalla nascita.</p>
+        </section>
+
+        <section id="successo" class="section">
+            <h2 class="title-hero">Successo e Grazia</h2>
+            <p>Nonostante le opere non contino per guadagnarsi la salvezza, il calvinismo non invita all'inazione, ma spinge il fedele a impegnarsi per fare cose buone e capire quale sia la scelta di Dio. Calvino sostiene infatti che se un individuo riesce a eccellere in maniera seria ed efficace come buon cristiano, buon capo-famiglia o in ambito economico, ciò significa che egli si trova già nella condizione della grazia divina. Il successo ottenuto lavorando con dedizione, l'inclinazione spontanea al rispetto dei comandamenti divini e persino l'ottenimento di una soddisfacente ricchezza diventano indizi terreni per sperare di appartenere alla schiera degli eletti. Questo principio si applica a qualsiasi professione, partendo dai lavori più umili degli artigiani fino ad arrivare alle floride attività dei mercanti, poiché ogni successo materiale o lavorativo viene interpretato come il segno che Dio ha concesso e donato la sua benedizione a quella specifica persona.</p>
+        </section>
+
+        <section id="capitalismo" class="section">
+            <h2 class="title-hero">Etica e Capitalismo</h2>
+            <p>Il fervore religioso generato dalla necessità di scoprire se si fosse eletti o perduti spinse i fedeli calvinisti ad attivarsi energicamente nella vita e a rischiare il tutto per tutto con massima intraprendenza. Questo peculiare fenomeno sociale ed economico è stato analizzato all'inizio del Novecento dal famoso sociologo, storico ed economista tedesco Max Weber nel suo celebre saggio intitolato "L'etica protestante e lo spirito del capitalismo", pubblicato tra il 1904 e il 1905. Weber affermò che non fu una coincidenza il fatto che il capitalismo si fosse diffuso maggiormente proprio in quelle aree europee, come l'Inghilterra e alcune zone della Francia, e in seguito in quelle americane, dove si era ampiamente affermato il calvinismo. Secondo la tesi del sociologo, la mentalità calvinista ha preparato il terreno all'imprenditoria perché considerava il successo, ottenuto rischiando capitali e puntando in alto nel lavoro, come una vera e propria "cartina tornasole" in grado di far intravedere al fedele la sua felice predestinazione.</p>
+        </section>
+
+        <section id="eucarestia" class="section">
+            <h2 class="title-hero">Il Sacramento dell'Eucarestia</h2>
+            <p>Un'importante divergenza teologica che distingue in modo netto la dottrina di Giovanni Calvino dalle altre correnti cristiane riguarda l'interpretazione dogmatica del momento dell'Eucarestia. I cattolici tradizionalisti credono nel processo teologico di transustanziazione, che consiste nella trasformazione letterale del pane e del vino nel corpo e nel sangue di Cristo. I luterani, d'altro canto, sostengono la consustanziazione, credendo che vi sia una trasformazione ma che vi sia anche la presenza contemporanea di due sostanze, per cui il corpo e il sangue mantengono al contempo la natura di Pane e Vino. Al contrario di entrambe queste visioni, per Calvino e per tutti i suoi seguaci, il pane e il vino non subiscono alcuna reale mutazione, ma restano puramente Pane e Vino, fungendo esclusivamente da simboli della figura di Cristo.</p>
+        </section>
+
+        <section id="rigorismo" class="section">
+            <h2 class="title-hero">Rigorismo a Ginevra</h2>
+            <p>Le grandi novità introdotte dalla Riforma calvinista riguardarono pesantemente anche la dimensione della moralità, esigendo che la comunità fosse ineccepibile e non si lasciasse trascinare dai vizi, visti come comportamenti indegni che allontanano da Dio. Nella città di Ginevra, divenuta in breve tempo la roccaforte di questa confessione, furono progressivamente chiuse tutte le taverne per evitare la perdita di autocontrollo dovuta all'ubriachezza, così come vennero proibite le sale da ballo e tutti gli spettacoli teatrali e musicali, considerati una pericolosa distrazione dalla rettitudine morale. Oltre a vietare il gioco d'azzardo, fu imposto il divieto al lusso: i cittadini dovevano indossare abiti scuri, lunghi e privi di eleganza per preservare modestia e moderazione. Questa attenzione maniacale al comportamento era garantita dalla fusione tra Chiesa e Stato nell'organismo del Concistoro, un consiglio di dodici anziani laici e pastori (presbiteri) che controllava la moralità dei cittadini, punendo i trasgressori con la revoca delle cariche politiche o perfino con la cacciata.</p>
+        </section>
+
+        <section id="intolleranza" class="section">
+            <h2 class="title-hero">Intolleranza e Serveto</h2>
+            
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Michael_Servetus.jpg/400px-Michael_Servetus.jpg" alt="Ritratto di Michele Serveto" class="content-img" style="max-width: 300px;">
+            <p class="img-caption">Michele Serveto, umanista, medico e teologo spagnolo</p>
+
+            <p>Nonostante l'enfasi sulla disciplina morale, Giovanni Calvino dimostrò di essere estremamente intollerante e crudele verso i suoi oppositori o verso chiunque professasse idee diverse dalle sue, un atteggiamento di rigidità peraltro condiviso con altri riformatori dell'epoca, come Lutero. Ognuno di questi leader, infatti, pensava che il proprio credo fosse l'unico corretto e che tutti gli altri fossero semplici strumenti del demonio. Il clima fortemente intransigente e repressivo generato dal calvinismo trovò la sua massima espressione in un evento molto emblematico riguardante Michele Serveto, un importante scienziato e medico spagnolo noto per aver scoperto la circolazione sanguigna polmonare. Serveto, che nutriva profondi interessi religiosi ed era convinto che il dogma della Trinità fosse sbagliato, si recò appositamente a Ginevra per discutere e confrontarsi sulle sue opinioni. Al suo arrivo in città, nel 1553, Calvino non ammise il confronto, ma lo fece immediatamente trarre in arresto e lo condannò a morire sul rogo.</p>
+        </section>
+
+        <section id="quiz-start" class="section">
+            <h2 class="title-hero">Quiz sulla Riforma</h2>
+            <div id="quiz-container">
+                <div id="quiz-intro">
+                    <p>Metti alla prova le tue conoscenze su Giovanni Calvino. Inserisci il tuo nickname per iniziare:</p>
+                    <input type="text" id="nickname" class="nickname-input" placeholder="Tuo Nickname...">
+                    <button class="btn-action" onclick="startQuiz()">INIZIA SFIDA</button>
+                    
+                    <div style="margin-top: 2rem;">
+                        <h3>Classifica Top 3</h3>
+                        <table class="leaderboard-table" id="leaderboard">
+                            <thead><tr><th>Pos</th><th>Nick</th><th>Punti</th><th>Tempo</th></tr></thead>
+                            <tbody id="leaderboard-body"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div id="quiz-game" style="display: none;">
+                    <div style="display: flex; justify-content: space-between; font-weight: bold; margin-bottom: 1rem; color: var(--accent-color);">
+                        <span id="question-number"></span>
+                        <span id="timer">Tempo: 0s</span>
+                    </div>
+                    <h3 id="question-text" style="margin-bottom: 1.5rem; font-family: 'Lora', serif;"></h3>
+                    <div id="options-container"></div>
+                </div>
+
+                <div id="quiz-results" style="display: none; text-align: center;">
+                    <h2 id="result-message"></h2>
+                    <p id="result-score" style="font-size: 1.5rem; font-weight: bold; margin: 1rem 0;"></p>
+                    <button class="btn-action" onclick="showSection('quiz-start')">TORNA ALLA HOME QUIZ</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // --- Navigation Logic ---
+        function toggleMenu() {
+            document.getElementById('sidebar').classList.toggle('active');
+            document.getElementById('overlay').classList.toggle('active');
+        }
+
+        function showSection(id) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            window.scrollTo(0, 0);
+            if(document.getElementById('sidebar').classList.contains('active')) toggleMenu();
+            if(id === 'quiz-start') resetQuizUI();
+        }
+
+        // --- Quiz Data ---
+        const questions = [
+            { q: "In quale città e in quale anno è nato Giovanni Calvino?", a: ["Parigi, 1534", "Ginevra, 1564", "Noyon, 1509", "Roma, 1483"], c: 2 },
+            { q: "Perché a venticinque anni Calvino dovette fuggire dalla Francia?", a: ["Per cercare fortuna economica", "Per le persecuzioni di Francesco I", "Per accuse di eresia", "Per fondare uno stato"], c: 1 },
+            { q: "Qual è la tesi teologica più importante di Calvino?", a: ["Consustanziazione", "Libero arbitrio", "Predestinazione", "Transustanziazione"], c: 2 },
+            { q: "Cosa sostiene la dottrina della predestinazione?", a: ["Salvezza tramite buone azioni", "Salvezza tramite indulgenze", "Dio ha già deciso chi salvare/dannare", "Solo i pastori si salvano"], c: 2 },
+            { q: "A cosa servono le opere buone per la salvezza?", a: ["A nulla, destino già scelto", "Fondamentali per convincere Dio", "Riducono il Purgatorio", "Solo se con donazioni"], c: 0 },
+            { q: "Come viene interpretato il successo lavorativo?", a: ["Tentazione demoniaca", "Segno di grazia divina", "Esclusivo merito umano", "Peccato di vanità"], c: 1 },
+            { q: "Chi ha scritto 'L'etica protestante e lo spirito del capitalismo'?", a: ["G. Calvino", "M. Lutero", "Max Weber", "M. Serveto"], c: 2 },
+            { q: "Quale legame individua Max Weber?", a: ["Calvinismo e Capitalismo", "Luteranesimo e agricoltura", "Cattolicesimo e povertà", "Teatro e morale"], c: 0 },
+            { q: "Come interpretano i calvinisti l'Eucarestia?", a: ["Transustanziazione", "Consustanziazione", "Simboli puramente spirituali", "Abolizione totale"], c: 2 },
+            { q: "Quale processo è proprio dei cattolici?", a: ["Transustanziazione", "Consustanziazione", "Predestinazione", "Giustificazione"], c: 0 },
+            { q: "Quale processo è proprio dei luterani?", a: ["Transustanziazione", "Consustanziazione", "Predestinazione", "Ortodossia"], c: 1 },
+            { q: "Cosa NON fu vietato a Ginevra?", a: ["Teatro", "Azzardo", "Lavoro artigianale", "Taverne"], c: 2 },
+            { q: "Come dovevano vestirsi i cittadini a Ginevra?", a: ["Lussuosamente", "Modesti, scuri e lunghi", "Corti e colorati", "Nessuna regola"], c: 1 },
+            { q: "Quale organismo univa Chiesa e Stato a Ginevra?", a: ["Parlamento", "Concistoro", "Inquisizione", "Consiglio Nobili"], c: 1 },
+            { q: "Da chi era formato il Concistoro?", a: ["12 laici e pastori", "Sacerdoti convertiti", "Re e ministri", "Mercanti ricchi"], c: 0 },
+            { q: "Punizioni per l'immoralità a Ginevra?", a: ["Scomunica/pellegrinaggio", "Multe", "Cacciata o revoca cariche", "Divieto lavoro"], c: 2 },
+            { q: "Chi era Michele Serveto?", a: ["Sociologo tedesco", "Scienziato e medico spagnolo", "Re di Francia", "Pastore svizzero"], c: 1 },
+            { q: "Scoperte di Michele Serveto?", a: ["Gravità", "Stampa", "Circolazione polmonare", "Sfericità terra"], c: 2 },
+            { q: "Perché Serveto andò a Ginevra?", a: ["Fuggire dall'Inquisizione", "Aprire taverna", "Confrontarsi sulla Trinità", "Curare Calvino"], c: 2 },
+            { q: "Cosa accadde a Serveto nel 1553?", a: ["Accolto nel Concistoro", "Arrestato e al rogo", "Espulso subito", "Libri bruciati"], c: 1 }
+        ];
+
+        // --- Quiz Logic ---
+        let currentQ = 0;
+        let score = 0;
+        let timer;
+        let seconds = 0;
+        let userNick = "";
+
+        function updateLeaderboardUI() {
+            const data = JSON.parse(localStorage.getItem('calvinoScores') || '[]');
+            const body = document.getElementById('leaderboard-body');
+            body.innerHTML = data.slice(0, 3).map((s, i) => 
+                `<tr><td>${i+1}</td><td>${s.nick}</td><td>${s.score}/20</td><td>${s.time}s</td></tr>`
+            ).join('');
+        }
+
+        function resetQuizUI() {
+            document.getElementById('quiz-intro').style.display = 'block';
+            document.getElementById('quiz-game').style.display = 'none';
+            document.getElementById('quiz-results').style.display = 'none';
+            updateLeaderboardUI();
+        }
+
+        function startQuiz() {
+            userNick = document.getElementById('nickname').value.trim();
+            if(!userNick) { alert("Inserisci un nickname!"); return; }
+            
+            currentQ = 0;
+            score = 0;
+            seconds = 0;
+            document.getElementById('quiz-intro').style.display = 'none';
+            document.getElementById('quiz-game').style.display = 'block';
+            
+            timer = setInterval(() => {
+                seconds++;
+                document.getElementById('timer').innerText = `Tempo: ${seconds}s`;
+            }, 1000);
+            
+            showQuestion();
+        }
+
+        function showQuestion() {
+            const q = questions[currentQ];
+            document.getElementById('question-number').innerText = `Domanda ${currentQ + 1} di 20`;
+            document.getElementById('question-text').innerText = q.q;
+            
+            const container = document.getElementById('options-container');
+            container.innerHTML = "";
+            
+            q.a.forEach((opt, index) => {
+                const btn = document.createElement('button');
+                btn.className = "option-btn";
+                btn.innerText = opt;
+                btn.onclick = () => checkAnswer(index);
+                container.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(idx) {
+            const correct = questions[currentQ].c;
+            const buttons = document.querySelectorAll('.option-btn');
+            
+            buttons.forEach(b => b.disabled = true);
+            
+            if(idx === correct) {
+                buttons[idx].classList.add('correct');
+                score++;
+            } else {
+                buttons[idx].classList.add('wrong');
+                buttons[correct].classList.add('correct');
+            }
+
+            setTimeout(() => {
+                currentQ++;
+                if(currentQ < questions.length) {
+                    showQuestion();
+                } else {
+                    endQuiz();
+                }
+            }, 1200);
+        }
+
+        function endQuiz() {
+            clearInterval(timer);
+            document.getElementById('quiz-game').style.display = 'none';
+            document.getElementById('quiz-results').style.display = 'block';
+            
+            document.getElementById('result-message').innerText = `Ottimo lavoro, ${userNick}!`;
+            document.getElementById('result-score').innerText = `Punteggio: ${score} / 20 in ${seconds} secondi`;
+
+            // Save score
+            let allScores = JSON.parse(localStorage.getItem('calvinoScores') || '[]');
+            allScores.push({ nick: userNick, score: score, time: seconds });
+            
+            // Sort by score desc, then time asc
+            allScores.sort((a, b) => b.score - a.score || a.time - b.time);
+            localStorage.setItem('calvinoScores', JSON.stringify(allScores));
+        }
+
+        // Init
+        updateLeaderboardUI();
+    </script>
+</body>
+</html>
